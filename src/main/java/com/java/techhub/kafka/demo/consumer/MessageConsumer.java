@@ -30,6 +30,7 @@ public class MessageConsumer {
 		SampleMessage payload = message.value();
 		LocalDateTime consumedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.timestamp()),
 				ZoneId.systemDefault());
+		log.info("Consuming: {}", message.value());
 		// TODO add logic handler when consuming message
 		log.info("[ CONSUMER - Local KAFKA] -- Successfully consumed message with id: {} published at: {}", payload.getUserId(), consumedTime);
 	}
@@ -44,6 +45,7 @@ public class MessageConsumer {
 		NewSampleMessage payload = message.value();
 		LocalDateTime consumedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.timestamp()),
 				ZoneId.systemDefault());
+		log.info("Consuming: {}", message.value());
 		// TODO add logic handler when consuming message
 		log.info("[ CONSUMER - {}] -- Successfully consumed message with id: {} published at: {}",message.topic(), payload.getUserId(), consumedTime);
 	}
