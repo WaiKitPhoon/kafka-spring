@@ -52,7 +52,7 @@ localhost:$server.port
 
 $server.port defined in application.properties
 
-##Spring Boot Config
+## Spring Boot Config
 
 Spring boot eliminates all the boiler template code of writing configuration classes for Kafka Consumers/Producers just by adding below configuration into your application.properties/application.yml file
 
