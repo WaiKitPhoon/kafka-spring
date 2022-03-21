@@ -2,6 +2,11 @@
 
 This is a simple spring application developed using Spring boot to demonstrate the integration of **[Apache Kafka](https://kafka.apache.org/)** which internally uses **[Zoo Keeper](https://zookeeper.apache.org/)** for managing different Kafka instances as a cluster. 
 
+Main capabilities of this project include:
+1. Create new topics in your local kafka env
+2. Debug messages being published/consumed in java POJOs
+
+
 ## Key concepts of Apache Kafka
 
 **Topic**: Topic is a unique representation or category to which producer publishes a stream of data. A topic will be subscribed by zero or multiple consumers for receiving data.
