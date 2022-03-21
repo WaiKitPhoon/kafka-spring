@@ -122,8 +122,6 @@ SpringfoxConfig -> Swagger2 configuration : localhost:<server_port>/swagger-ui.h
 
 ## Original Author
 
-**Mahesh Kumar Gutam**
-
-* [Github](https://github.com/MaheshIare)
+* [Github](https://github.com/MaheshIare/spring-boot-kafka-demo)
 
 
