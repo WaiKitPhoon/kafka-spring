@@ -3,17 +3,16 @@
  */
 package com.java.techhub.kafka.demo.consumer;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.techhub.kafka.demo.model.NewSampleMessage;
 import com.java.techhub.kafka.demo.model.SampleMessage;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
 
 /**
  * Consumer class for kafka listeners
@@ -23,16 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class MessageConsumer {
 
-
 	@KafkaListener(topics = "spring-local-kafka")
-	public void subsribeToTopicLocalKafka(ConsumerRecord<String, SampleMessage> message) {
-		log.info("[ CONSUMER - Local KAFKA] -- Start consuming message");
-		SampleMessage payload = message.value();
-		LocalDateTime consumedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.timestamp()),
-				ZoneId.systemDefault());
-		log.info("Consuming: {}", message.value());
-		// TODO add logic handler when consuming message
-		log.info("[ CONSUMER - Local KAFKA] -- Successfully consumed message with id: {} published at: {}", payload.getUserId(), consumedTime);
+	public void subsribeToTopicLocalKafka(@Payload String message,
+										  @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+										  @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
+										  @Header(KafkaHeaders.OFFSET) long offset) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		SampleMessage payload = objectMapper.readValue(message, SampleMessage.class);
+		log.info("[ CONSUMER - topic: {} ] Message consumed: {}", topic, payload);
 	}
 
 	/**
@@ -40,13 +37,12 @@ public class MessageConsumer {
 	 * @param message - message that has been published
 	 */
 	@KafkaListener(topics = "new-message")
-	public void subsribeToNewMessage(ConsumerRecord<String, NewSampleMessage> message) {
-		log.info("[ CONSUMER - {}] -- Start consuming message", message.topic());
-		NewSampleMessage payload = message.value();
-		LocalDateTime consumedTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.timestamp()),
-				ZoneId.systemDefault());
-		log.info("Consuming: {}", message.value());
-		// TODO add logic handler when consuming message
-		log.info("[ CONSUMER - {}] -- Successfully consumed message with id: {} published at: {}",message.topic(), payload.getUserId(), consumedTime);
+	public void subsribeToNewMessage(@Payload String message,
+									 @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+									 @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
+									 @Header(KafkaHeaders.OFFSET) long offset) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		NewSampleMessage payload = objectMapper.readValue(message, NewSampleMessage.class);
+		log.info("[ CONSUMER - topic: {} ] Message consumed: {}", topic, payload);
 	}
 }

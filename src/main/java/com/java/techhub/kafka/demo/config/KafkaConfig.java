@@ -31,7 +31,7 @@ public class KafkaConfig {
     // Sample example to create a new topic -- it runs on startup
     @Bean
     public NewTopic springLocalKafka() {
-        return new NewTopic("spring-local kafka", 1, (short) 1);
+        return new NewTopic("spring-local-kafka", 1, (short) 1);
     }
 
     // Eg new topic
@@ -39,4 +39,5 @@ public class KafkaConfig {
     public NewTopic newMessage() {
         return new NewTopic("new-message", 1, (short) 1);
     }
+
 }

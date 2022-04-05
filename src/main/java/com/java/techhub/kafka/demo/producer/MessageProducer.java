@@ -1,5 +1,7 @@
 package com.java.techhub.kafka.demo.producer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.techhub.kafka.demo.util.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +23,19 @@ import java.util.concurrent.ExecutionException;
 public class MessageProducer {
 
     @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public Map<String, Object> sendMessage(Object message, String topic) throws ExecutionException, InterruptedException {
+    public Map<String, Object> sendMessage(Object message, String topic) throws ExecutionException, InterruptedException, JsonProcessingException {
 
-        ListenableFuture<SendResult<String, Object>> future =
-                kafkaTemplate.send(topic, message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String messageString = objectMapper.writeValueAsString(message);
+        ListenableFuture<SendResult<String, String>> future =
+                kafkaTemplate.send(topic, messageString);
 
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 
             @Override
-            public void onSuccess(SendResult<String, Object> result) {
+            public void onSuccess(SendResult<String, String> result) {
                 log.info("[ PRODUCER - topic: {} ] Message successfully sent : {}", topic, message);
 
             }
@@ -45,7 +49,7 @@ public class MessageProducer {
         return populateRecordDetails(future, topic);
     }
 
-    private Map<String, Object> populateRecordDetails(ListenableFuture<SendResult<String, Object>> future, String topic)
+    private Map<String, Object> populateRecordDetails(ListenableFuture<SendResult<String, String>> future, String topic)
             throws ExecutionException, InterruptedException {
         Map<String, Object> returnMap = new HashMap<>();
 
